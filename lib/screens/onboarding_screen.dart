@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/color.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -84,7 +85,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 width: _currentPage == index ? 12 : 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: _currentPage == index ? Colors.brown : Colors.grey,
+                  color:
+                      _currentPage == index ? AppColors.primary : Colors.grey,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),

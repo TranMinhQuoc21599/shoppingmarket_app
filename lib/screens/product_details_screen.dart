@@ -1,37 +1,79 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import '../constants/color.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  int selectedColorIndex = 0;
+  int selectedSizeIndex = 0;
+  final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  final List<Color> colors = [
+    AppColors.productBeige,
+    AppColors.productLightBrown,
+    AppColors.productMediumBrown,
+    AppColors.productOrangeBrown,
+    AppColors.productBlack,
+  ];
+
+  final List<String> screenImages = [
+    'assets/images/screen/img1.png',
+    'assets/images/screen/img2.png',
+    'assets/images/screen/img3.png',
+    'assets/images/screen/img4.png',
+    'assets/images/screen/img5.png',
+  ];
+
+  String getRandomScreenImage() {
+    final random = Random();
+    return screenImages[random.nextInt(screenImages.length)];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Product Details', style: TextStyle(color: Colors.black)),
+        title: Text('Product Details', style: TextStyle(color: AppColors.text)),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite_border, color: Colors.black),
+            icon: Icon(Icons.favorite_border, color: AppColors.text),
             onPressed: () {},
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildImageCarousel(),
-            _buildProductInfo(),
-            _buildSizeSelector(),
-            _buildColorSelector(),
-            _buildPriceAndAddToCart(),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 100),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageCarousel(),
+                _buildProductInfo(),
+                _buildSizeSelector(),
+                _buildColorSelector(),
+                SizedBox(height: 100),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildPriceAndAddToCart(),
+          ),
+        ],
       ),
     );
   }
@@ -56,7 +98,11 @@ class ProductDetailsScreen extends StatelessWidget {
         children: [
           Text(
             'Light Brown Jacket',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.text,
+            ),
           ),
           SizedBox(height: 8),
           Row(
@@ -84,18 +130,38 @@ class ProductDetailsScreen extends StatelessWidget {
         children: [
           Text('Select Size', style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
-          Row(
-            children:
-                ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: ChoiceChip(
-                      label: Text(size),
-                      selected: false,
-                      onSelected: (selected) {},
-                    ),
-                  );
-                }).toList(),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(sizes.length, (index) {
+              return ChoiceChip(
+                label: Text(sizes[index]),
+                selected: selectedSizeIndex == index,
+                onSelected: (selected) {
+                  setState(() {
+                    selectedSizeIndex = index;
+                  });
+                },
+                selectedColor: AppColors.primary.withValues(alpha: .15),
+                labelStyle: TextStyle(
+                  color:
+                      selectedSizeIndex == index
+                          ? AppColors.primary
+                          : AppColors.text,
+                  fontWeight: FontWeight.bold,
+                ),
+                backgroundColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(
+                    color:
+                        selectedSizeIndex == index
+                            ? AppColors.primary
+                            : Colors.grey.shade300,
+                  ),
+                ),
+              );
+            }),
           ),
         ],
       ),
@@ -108,22 +174,51 @@ class ProductDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Select Color', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            'Select Color',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.text,
+            ),
+          ),
           SizedBox(height: 8),
-          Row(
-            children:
-                [
-                  Colors.brown,
-                  Colors.black,
-                  Colors.grey,
-                  Colors.orange,
-                  Colors.white,
-                ].map((color) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: CircleAvatar(backgroundColor: color, radius: 16),
-                  );
-                }).toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(colors.length, (index) {
+                final color = colors[index];
+                final isSelected = selectedColorIndex == index;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedColorIndex = index;
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: color,
+                      radius: 18,
+                      foregroundColor:
+                          isSelected && color == Colors.black
+                              ? Colors.white
+                              : null,
+                      child:
+                          isSelected
+                              ? Icon(
+                                Icons.check,
+                                color:
+                                    color == Colors.black
+                                        ? Colors.white
+                                        : AppColors.primary,
+                                size: 18,
+                              )
+                              : null,
+                    ),
+                  ),
+                );
+              }),
+            ),
           ),
         ],
       ),
@@ -131,29 +226,57 @@ class ProductDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildPriceAndAddToCart() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -2),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            " \$83.97",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.brown,
+          Flexible(
+            child: Text(
+              "${sizes[selectedSizeIndex]} | \$83.97",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
-            // style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.brown,
+              backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
-            child: Text('Add to Cart'),
+            child: Row(
+              children: [
+                Icon(Icons.add_shopping_cart, color: AppColors.buttonText),
+                SizedBox(width: 8),
+                Text(
+                  'Add to Cart',
+                  style: TextStyle(
+                    color: AppColors.buttonText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

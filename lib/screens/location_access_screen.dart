@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'enter_location_screen.dart';
+import '../constants/color.dart';
 
 class LocationAccessScreen extends StatelessWidget {
   const LocationAccessScreen({super.key});
@@ -12,7 +13,7 @@ class LocationAccessScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_on, size: 80, color: Colors.brown),
+            Icon(Icons.location_on, size: 80, color: AppColors.primary),
             SizedBox(height: 20),
             Text(
               "What is Your Location?",
@@ -31,7 +32,7 @@ class LocationAccessScreen extends StatelessWidget {
                 // Handle location access logic
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown,
+                backgroundColor: AppColors.primary,
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
               child: Text("Allow Location Access"),
@@ -47,7 +48,7 @@ class LocationAccessScreen extends StatelessWidget {
               },
               child: Text(
                 "Enter Location Manually",
-                style: TextStyle(color: Colors.brown),
+                style: TextStyle(color: AppColors.primary),
               ),
             ),
           ],

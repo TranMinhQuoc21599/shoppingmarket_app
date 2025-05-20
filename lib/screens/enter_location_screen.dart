@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'home_screen_screen.dart';
+import 'home_screen.dart';
+import '../constants/color.dart';
 
 class EnterLocationScreen extends StatelessWidget {
   const EnterLocationScreen({super.key});
@@ -12,14 +13,14 @@ class EnterLocationScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
           "Enter Your Location",
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: AppColors.primary),
         ),
       ),
       body: Padding(

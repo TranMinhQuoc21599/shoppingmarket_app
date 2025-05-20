@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'product_details_screen.dart';
+import '../constants/color.dart';
+import 'wishlist_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -21,7 +23,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(),
+      bottomNavigationBar: _buildBottomNavBar(context),
     );
   }
 
@@ -35,17 +37,17 @@ class HomePage extends StatelessWidget {
           Text('Location', style: TextStyle(fontSize: 12, color: Colors.grey)),
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.brown, size: 16),
-              Text('New York, USA', style: TextStyle(color: Colors.black)),
-              Icon(Icons.keyboard_arrow_down, color: Colors.black),
+              Icon(Icons.location_on, color: AppColors.primary, size: 16),
+              Text('New York, USA', style: TextStyle(color: AppColors.text)),
+              Icon(Icons.keyboard_arrow_down, color: AppColors.text),
             ],
           ),
         ],
       ),
       actions: [
         CircleAvatar(
-          backgroundColor: Colors.brown[100],
-          child: Icon(Icons.person, color: Colors.brown),
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+          child: Icon(Icons.person, color: AppColors.primary),
         ),
         SizedBox(width: 16),
       ],
@@ -59,9 +61,9 @@ class HomePage extends StatelessWidget {
         decoration: InputDecoration(
           hintText: 'Search',
           prefixIcon: Icon(Icons.search),
-          suffixIcon: Icon(Icons.tune, color: Colors.brown),
+          suffixIcon: Icon(Icons.tune, color: AppColors.primary),
           filled: true,
-          fillColor: Colors.brown[50],
+          fillColor: AppColors.primary.withValues(alpha: 0.05),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide.none,
@@ -100,7 +102,7 @@ class HomePage extends StatelessWidget {
             final banner = banners[index];
             return Container(
               decoration: BoxDecoration(
-                color: Colors.brown[100],
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -122,7 +124,7 @@ class HomePage extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.brown,
+                              backgroundColor: AppColors.primary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -174,7 +176,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () {},
                   child: Text(
                     'See All',
-                    style: TextStyle(color: Colors.brown, fontSize: 16),
+                    style: TextStyle(color: AppColors.primary, fontSize: 16),
                   ),
                 ),
               ],
@@ -197,11 +199,11 @@ class HomePage extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.brown[100],
+                          color: AppColors.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.brown.withOpacity(0.2),
+                              color: AppColors.primary.withValues(alpha: 0.2),
                               blurRadius: 8,
                               offset: Offset(0, 4),
                             ),
@@ -209,7 +211,7 @@ class HomePage extends StatelessWidget {
                         ),
                         child: Icon(
                           category['icon'] as IconData,
-                          color: Colors.brown,
+                          color: AppColors.primary,
                           size: 28,
                         ),
                       ),
@@ -235,46 +237,68 @@ class HomePage extends StatelessWidget {
   Widget _buildFlashSaleSection() {
     return SizedBox(
       width: double.infinity,
-      child: DefaultTabController(
-        length: 3,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Flash Sale', style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Ends in:', style: TextStyle(color: Colors.grey)),
-                  Row(
-                    children: [
-                      _buildCountdownBox('01'),
-                      Text(':'),
-                      _buildCountdownBox('23'),
-                      Text(':'),
-                      _buildCountdownBox('45'),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                child: TabBar(
-                  tabs: [
-                    Tab(text: 'All'),
-                    Tab(text: 'Clothing'),
-                    Tab(text: 'Electronics'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Flash Sale', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Filter:', style: TextStyle(color: Colors.grey)),
+                Row(
+                  children: [
+                    _buildCountdownBox('02'),
+                    Text(':'),
+                    _buildCountdownBox('12'),
+                    Text(':'),
+                    _buildCountdownBox('56'),
                   ],
-                  labelColor: Colors.brown,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.brown,
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            // Filter buttons row
+            SizedBox(
+              width: double.infinity,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildFilterButton('All', false),
+                    SizedBox(width: 8),
+                    _buildFilterButton('Newest', true),
+                    SizedBox(width: 8),
+                    _buildFilterButton('Popular', false),
+                    SizedBox(width: 8),
+                    _buildFilterButton('Man', false),
+                    SizedBox(width: 8),
+                    _buildFilterButton('Woman', false),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterButton(String label, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primary : Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.primary),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? Colors.white : AppColors.primary,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -284,7 +308,7 @@ class HomePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.brown[100],
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
@@ -317,9 +341,7 @@ class HomePage extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => ProductDetailsScreen()),
         );
       },
       child: ConstrainedBox(
@@ -343,7 +365,10 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('\$83.97', style: TextStyle(color: Colors.brown)),
+                        Text(
+                          '\$83.97',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
                         Row(
                           children: [
                             Icon(Icons.star, color: Colors.amber, size: 16),
@@ -362,7 +387,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNavBar() {
+  Widget _buildBottomNavBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -373,27 +398,42 @@ class HomePage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem(Icons.home_filled, true),
-          _buildNavItem(Icons.shopping_bag_outlined, false),
-          _buildNavItem(Icons.favorite_border, false),
-          _buildNavItem(Icons.chat_bubble_outline, false),
-          _buildNavItem(Icons.person_outline, false),
+          _buildNavItem(Icons.home_filled, true, 0, context),
+          _buildNavItem(Icons.shopping_bag_outlined, false, 1, context),
+          _buildNavItem(Icons.favorite_border, false, 2, context),
+          _buildNavItem(Icons.chat_bubble_outline, false, 3, context),
+          _buildNavItem(Icons.person_outline, false, 4, context),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.white : Colors.transparent,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: isSelected ? Colors.black : Colors.grey,
-        size: 24,
+  Widget _buildNavItem(
+    IconData icon,
+    bool isSelected,
+    int index,
+    BuildContext context,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        if (index == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WishlistScreen()),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          color: isSelected ? AppColors.text : Colors.grey,
+          size: 24,
+        ),
       ),
     );
   }

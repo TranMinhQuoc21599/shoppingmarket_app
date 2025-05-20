@@ -15,7 +15,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
   flutter_svg: ^2.0.5
-  geolocator: ^10.0.0
+  geolocator: ^14.0.0
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +26,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/images/screen/
     - assets/logos/
     
